@@ -1,0 +1,115 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: eXPert
+ * Date: 16.02.2016
+ * Time: 22:29
+ */
+
+namespace CatalogBundle\Entity;
+
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use JMS\Serializer\Annotation as JMS;
+
+/**
+ * Class Phone
+ *
+ * @ORM\Entity(repositoryClass="CatalogBundle\Repository\PhoneRepository")
+ * @ORM\Table(name="phones")
+ * @DoctrineAssert\UniqueEntity("name")
+ *
+ * @author Dmitriy Ramenev <diman4k@gmail.com>
+ */
+class Phone
+{
+    /**
+     * @var integer
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @JMS\Exclude
+     */
+    protected $id;
+
+    /**
+     * @var String
+     *
+     * @ORM\Column(name="number", type="string", length=255, nullable=false, unique=true)
+     */
+    protected $number;
+
+    /**
+     * @var Firm
+     *
+     * @Assert\NotBlank()
+     * @ORM\ManyToOne(targetEntity="CatalogBundle\Entity\Firm", inversedBy="phones")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="firm_id", referencedColumnName="id", nullable=false)
+     * })
+     */
+    protected $firm;
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set number
+     *
+     * @param string $number
+     *
+     * @return Phone
+     */
+    public function setNumber($number)
+    {
+        $this->number = $number;
+
+        return $this;
+    }
+
+    /**
+     * Get number
+     *
+     * @return string
+     */
+    public function getNumber()
+    {
+        return $this->number;
+    }
+
+    /**
+     * Set firm
+     *
+     * @param Firm $firm
+     *
+     * @return Phone
+     */
+    public function setFirm(Firm $firm)
+    {
+        $this->firm = $firm;
+
+        return $this;
+    }
+
+    /**
+     * Get firm
+     *
+     * @return Firm
+     */
+    public function getFirm()
+    {
+        return $this->firm;
+    }
+
+    public function __toString(){
+        return $this->getNumber();
+    }
+}

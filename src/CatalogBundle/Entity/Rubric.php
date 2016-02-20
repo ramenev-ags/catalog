@@ -1,0 +1,259 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: eXPert
+ * Date: 16.02.2016
+ * Time: 22:29
+ */
+
+namespace CatalogBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use JMS\Serializer\Annotation as JMS;
+use Gedmo\Mapping\Annotation as Gedmo;
+
+/**
+ * Class Rubric
+ *
+ * @Gedmo\Tree(type="closure")
+ * @Gedmo\TreeClosure(class="CatalogBundle\Entity\RubricClosure")
+ * @ORM\Entity(repositoryClass="CatalogBundle\Repository\RubricRepository")
+ * @ORM\Table(name="rubrics")
+ * @DoctrineAssert\UniqueEntity("name")
+ *
+ * @author Dmitriy Ramenev <diman4k@gmail.com>
+ */
+class Rubric
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @var String
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=false, unique=true)
+     */
+    protected $name;
+
+    /**
+     * @var Rubric
+     *
+     * @Gedmo\TreeParent
+     * @ORM\ManyToOne(targetEntity="Rubric", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+     * @JMS\Exclude
+     */
+    protected $parent;
+
+    /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="Rubric", mappedBy="parent")
+     */
+    protected $children;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\TreeLevel
+     */
+    protected $level;
+
+    /**
+     * @var Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Firm", mappedBy="rubrics")
+     * @JMS\Exclude
+     */
+    protected $firms;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->firms = new ArrayCollection();
+        $this->children = new ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Rubric
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Add firm
+     *
+     * @param Firm $firm
+     *
+     * @return Rubric
+     */
+    public function addFirm(Firm $firm)
+    {
+        $this->firms[] = $firm;
+
+        $firm->addRubric($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove firm
+     *
+     * @param Firm $firm
+     */
+    public function removeFirm(Firm $firm)
+    {
+        $this->firms->removeElement($firm);
+        $firm->removeRubric($this);
+    }
+
+    /**
+     * Get firms
+     *
+     * @return Collection
+     */
+    public function getFirms()
+    {
+        return $this->firms;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param Rubric $parent
+     *
+     * @return Rubric
+     */
+    public function setParent(Rubric $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return Rubric
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function __toString(){
+        return $this->getName();
+    }
+
+    /**
+     * Set level
+     *
+     * @param integer $level
+     *
+     * @return Rubric
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * Get level
+     *
+     * @return integer
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    /**
+     * Add child
+     *
+     * @param Rubric $child
+     *
+     * @return Rubric
+     */
+    public function addChild(Rubric $child)
+    {
+        $this->children[] = $child;
+
+        return $this;
+    }
+
+    /**
+     * Remove child
+     *
+     * @param Rubric $child
+     */
+    public function removeChild(Rubric $child)
+    {
+        $this->children->removeElement($child);
+    }
+
+    /**
+     * Get children
+     *
+     * @return Collection
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * @return int
+     *
+     * @JMS\VirtualProperty()
+     */
+    public function getParentId(){
+        if($this->getParent()){
+            return $this->getParent()->getId();
+        }
+
+        return null;
+    }
+}

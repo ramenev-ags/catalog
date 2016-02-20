@@ -1,0 +1,21 @@
+catalog:
+    resource: "@CatalogBundle/Controller"
+    type:     annotation
+    prefix:   /
+
+apiDoc:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /api/doc
+
+api:
+    resource: "@CatalogBundle/Controller/API"
+    prefix:   /api
+
+logout:
+    path: /logout
+
+apiLogout:
+    path: /api/logout
+
+apiDocLogout:
+    path: /api/doc/logout

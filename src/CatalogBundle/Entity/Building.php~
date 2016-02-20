@@ -1,0 +1,174 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: eXPert
+ * Date: 16.02.2016
+ * Time: 22:29
+ */
+
+namespace CatalogBundle\Entity;
+
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+
+/**
+ * Class Building
+ *
+ * @ORM\Entity(repositoryClass="CatalogBundle\Repository\BuildingRepository")
+ * @ORM\Table(name="buildings", indexes={
+ *     @ORM\Index(name="search_lat_lng_idx", columns={"lat", "lng"}),
+ *     @ORM\Index(name="search_city_address_idx", columns={"city", "address"})
+ * })
+ * @DoctrineAssert\UniqueEntity(fields = {"city", "address"})
+ *
+ * @author Dmitriy Ramenev <diman4k@gmail.com>
+ */
+class Building
+{
+    /**
+     * @var integer
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @var Double
+     *
+     * @ORM\Column(name="lat", type="decimal", nullable=false, precision=8, scale=6)
+     */
+    protected $lat;
+
+    /**
+     * @var Double
+     *
+     * @ORM\Column(name="lng", type="decimal", nullable=false, precision=9, scale=6)
+     */
+    protected $lng;
+
+    /**
+     * @var String
+     *
+     * @ORM\Column(name="address", type="string", length=255, nullable=false, unique=false)
+     */
+    protected $address;
+
+    /**
+     * @var String
+     *
+     * @ORM\Column(name="city", type="string", length=255, nullable=false, unique=false)
+     */
+    protected $city;
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set lat
+     *
+     * @param string $lat
+     *
+     * @return Building
+     */
+    public function setLat($lat)
+    {
+        $this->lat = $lat;
+
+        return $this;
+    }
+
+    /**
+     * Get lat
+     *
+     * @return string
+     */
+    public function getLat()
+    {
+        return $this->lat;
+    }
+
+    /**
+     * Set lng
+     *
+     * @param string $lng
+     *
+     * @return Building
+     */
+    public function setLng($lng)
+    {
+        $this->lng = $lng;
+
+        return $this;
+    }
+
+    /**
+     * Get lng
+     *
+     * @return string
+     */
+    public function getLng()
+    {
+        return $this->lng;
+    }
+
+    /**
+     * Set address
+     *
+     * @param string $address
+     *
+     * @return Building
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * Get address
+     *
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * Set city
+     *
+     * @param string $city
+     *
+     * @return Building
+     */
+    public function setCity($city)
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * Get city
+     *
+     * @return string
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    public function __toString(){
+        return $this->getCity() . ', ' .$this->getAddress();
+    }
+}

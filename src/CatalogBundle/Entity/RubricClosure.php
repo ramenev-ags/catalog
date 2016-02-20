@@ -1,0 +1,22 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: eXPert
+ * Date: 20.02.2016
+ * Time: 3:28
+ */
+
+namespace CatalogBundle\Entity;
+
+use Gedmo\Tree\Entity\MappedSuperclass\AbstractClosure;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Class RubricClosure
+ * @package CatalogBundle\Entity
+ *
+ * @ORM\Entity
+ */
+class RubricClosure extends AbstractClosure
+{
+}

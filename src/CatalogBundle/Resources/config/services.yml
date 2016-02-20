@@ -1,0 +1,17 @@
+services:
+#    catalog.example:
+#        class: CatalogBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]
+
+    lexik_jwt_authentication.handler.authentication_failure:
+        class: CatalogBundle\Security\Http\Authentication\AuthenticationFailureHandler
+        tags:
+            - { name: monolog.logger, channel: security }
+        arguments:
+            - "@event_dispatcher"
+            - "@service_container"
+
+    lexik_jwt_authentication.security.authentication.entry_point:
+        class: CatalogBundle\Security\Http\EntryPoint\AuthenticationEntryPoint
+        arguments:
+            - "@service_container"
